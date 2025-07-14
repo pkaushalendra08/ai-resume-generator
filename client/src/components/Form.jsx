@@ -24,7 +24,7 @@ export default function Form({ onResult }) {
     onResult("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/generate", {
+      const res = await fetch(import.meta.env.VITE_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, mode: type }) // send mode to backend
