@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Form({ onResult }) {
+export default function Form({ onResult, outputRef }) {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -32,6 +32,12 @@ export default function Form({ onResult }) {
 
       const data = await res.json();
       onResult(data.content, type); // pass content and type to Output
+
+      // ✅ Auto scroll to output section
+      if (outputRef?.current) {
+        outputRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+
     } catch (err) {
       onResult("❌ Error: Could not generate result.", type);
     } finally {

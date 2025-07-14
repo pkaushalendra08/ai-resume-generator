@@ -25,7 +25,7 @@ const formatText = (text) => {
     });
 };
 
-export default function Output({ result, type }) {
+export default function Output({ result, type, outputRef }) {
   const [resume, setResume] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
 
@@ -40,58 +40,57 @@ export default function Output({ result, type }) {
   }, [result, type]);
 
   const downloadPDF = (text, filename) => {
-  const doc = new jsPDF({ unit: "mm", format: "a4", lineHeight: 1.5 });
+    const doc = new jsPDF({ unit: "mm", format: "a4", lineHeight: 1.5 });
 
-  const marginLeft = 20;
-  const marginTop = 20;
-  const maxWidth = 170;
-  let y = marginTop;
+    const marginLeft = 20;
+    const marginTop = 20;
+    const maxWidth = 170;
+    let y = marginTop;
 
-  // Cleanup formatting
-  const lines = text
-    .replace(/\*\*/g, "")
-    .replace(/\[([^\]]+)]\([^)]+\)/g, "$1")
-    .replace(/^\*\s*/gm, "")
-    .split(/\r?\n/)
-    .filter((line) => line.trim() !== "");
+    const lines = text
+      .replace(/\*\*/g, "")
+      .replace(/\[([^\]]+)]\([^)]+\)/g, "$1")
+      .replace(/^\*\s*/gm, "")
+      .split(/\r?\n/)
+      .filter((line) => line.trim() !== "");
 
-  lines.forEach((line, i) => {
-    const isName = i === 0;
-    const isHeading = /^[A-Za-z ]+:$/.test(line.trim()) || /^[A-Za-z ]+$/.test(line.trim()) && lines[i + 1]?.startsWith("+");
+    lines.forEach((line, i) => {
+      const isName = i === 0;
+      const isHeading = /^[A-Za-z ]+:$/.test(line.trim()) || (/^[A-Za-z ]+$/.test(line.trim()) && lines[i + 1]?.startsWith("+"));
 
-    if (y > 270) {
-      doc.addPage();
-      y = marginTop;
-    }
+      if (y > 270) {
+        doc.addPage();
+        y = marginTop;
+      }
 
-    // Apply formatting
-    if (isName) {
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-    } else if (isHeading) {
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(14);
-    } else {
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(12);
-    }
+      if (isName) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+      } else if (isHeading) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+      } else {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+      }
 
-    // Break long lines
-    const wrapped = doc.splitTextToSize(line.trim(), maxWidth);
-    wrapped.forEach((segment) => {
-      doc.text(segment, marginLeft, y);
-      y += 7;
+      const wrapped = doc.splitTextToSize(line.trim(), maxWidth);
+      wrapped.forEach((segment) => {
+        doc.text(segment, marginLeft, y);
+        y += 7;
+      });
     });
-  });
 
-  doc.save(filename);
-};
-
+    doc.save(filename);
+  };
 
   if (!resume && !coverLetter) return null;
 
   return (
-    <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto p-4">
+    <div
+      ref={outputRef}
+      className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto p-4"
+    >
       {/* Resume Block */}
       <div className="bg-white p-6 rounded-xl shadow border max-h-[90vh] overflow-auto">
         <div className="flex justify-between items-center mb-4">
