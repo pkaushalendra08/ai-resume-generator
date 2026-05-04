@@ -80,13 +80,25 @@ ${date?.trim() ? `Date: ${date.trim()}` : ""}
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama3-70b-8192",
+        model: "llama-3.3-70b-versatile",
         messages: [{ role: "user", content: prompt }]
       })
     });
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "❌ No content returned.";
+
+    if (data.error) {
+      console.error("❌ Groq API Error:", data.error.message);
+      return res.status(500).json({ error: `Groq API Error: ${data.error.message}` });
+    }
+
+    const content = data.choices?.[0]?.message?.content;
+    
+    if (!content) {
+      console.warn("⚠️ No content in Groq response choices.");
+      return res.status(200).json({ content: "❌ No content returned." });
+    }
+
     res.status(200).json({ content });
 
   } catch (err) {

@@ -31,7 +31,12 @@ export default function Form({ onResult, outputRef }) {
       });
 
       const data = await res.json();
-      onResult(data.content, type); // pass content and type to Output
+      
+      if (!res.ok) {
+        onResult(data.error || "❌ Error: Could not generate result.", type);
+      } else {
+        onResult(data.content, type); // pass content and type to Output
+      }
 
       // ✅ Auto scroll to output section
       if (outputRef?.current) {
@@ -48,141 +53,151 @@ export default function Form({ onResult, outputRef }) {
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="space-y-4 bg-white p-6 rounded-2xl shadow-lg max-w-2xl mx-auto mt-8"
+      className="glass-card p-8 max-w-4xl mx-auto space-y-8"
     >
-      <h2 className="text-2xl font-bold mb-4 text-center text-purple-700">
-        AI-based Resume & Cover Letter Generator
-      </h2>
-
-      {/* Name */}
-      <div>
-        <label className="block font-medium mb-1">Full Name</label>
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          placeholder="e.g. Manoj Kumar"
-          className="w-full border border-gray-300 p-2 rounded"
-        />
+      <div className="border-b border-slate-700/50 pb-6">
+        <h2 className="text-3xl font-bold text-white">Your Professional Profile</h2>
+        <p className="text-slate-400 mt-1">Fill in your details to generate your career documents.</p>
       </div>
 
-      {/* Email */}
-      <div>
-        <label className="block font-medium mb-1">Email Address</label>
-        <input
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          placeholder="e.g. example@email.com"
-          className="w-full border border-gray-300 p-2 rounded"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Personal Details Section */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold text-indigo-400 uppercase tracking-wider">Personal Information</h3>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">Full Name</label>
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Manoj Kumar"
+              className="saas-input"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">Email Address</label>
+            <input
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="example@email.com"
+              className="saas-input"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">Mobile Number</label>
+            <input
+              name="mobile"
+              value={form.mobile}
+              onChange={handleChange}
+              placeholder="+91 98XXXXXXXX"
+              className="saas-input"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">Social Links</label>
+            <input
+              name="social"
+              value={form.social}
+              onChange={handleChange}
+              placeholder="LinkedIn, GitHub"
+              className="saas-input"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">Target Date</label>
+            <input
+              type="date"
+              name="date"
+              value={form.date}
+              onChange={handleChange}
+              className="saas-input [color-scheme:dark]"
+            />
+          </div>
+        </div>
+
+        {/* Professional Details Section */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold text-indigo-400 uppercase tracking-wider">Professional details</h3>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">Skills</label>
+            <textarea
+              name="skills"
+              value={form.skills}
+              onChange={handleChange}
+              placeholder="React, Node.js, SQL..."
+              className="saas-input min-h-[100px]"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">Experience Summary</label>
+            <textarea
+              name="experience"
+              value={form.experience}
+              onChange={handleChange}
+              placeholder="Summarize your career highlights..."
+              className="saas-input min-h-[100px]"
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Mobile */}
-      <div>
-        <label className="block font-medium mb-1">Mobile Number</label>
-        <input
-          name="mobile"
-          value={form.mobile}
-          onChange={handleChange}
-          placeholder="e.g. +9198XXXXXXXX"
-          className="w-full border border-gray-300 p-2 rounded"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-1.5">Education</label>
+          <textarea
+            name="education"
+            value={form.education}
+            onChange={handleChange}
+            placeholder="Degrees, certifications..."
+            className="saas-input h-24"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-1.5">Career Goals</label>
+          <textarea
+            name="careerGoals"
+            value={form.careerGoals}
+            onChange={handleChange}
+            placeholder="What are you looking for?"
+            className="saas-input h-24"
+          />
+        </div>
       </div>
 
-      {/* Social */}
-      <div>
-        <label className="block font-medium mb-1">Social Media Links</label>
-        <input
-          name="social"
-          value={form.social}
-          onChange={handleChange}
-          placeholder="LinkedIn, GitHub (comma separated)"
-          className="w-full border border-gray-300 p-2 rounded"
-        />
-      </div>
-
-      {/* Date (for cover letter only) */}
-      <div>
-        <label className="block font-medium mb-1">Date (used in Cover Letter)</label>
-        <input
-          type="date"
-          name="date"
-          value={form.date}
-          onChange={handleChange}
-          className="w-full border border-gray-300 p-2 rounded"
-        />
-      </div>
-
-      {/* Experience */}
-      <div>
-        <label className="block font-medium mb-1">Experience</label>
-        <textarea
-          name="experience"
-          value={form.experience}
-          onChange={handleChange}
-          placeholder={`e.g.\n- Web Developer at XYZ Company (2022–2024)\n- Built 10+ apps using React and Node.js`}
-          className="w-full border border-gray-300 p-2 rounded"
-          rows={3}
-        />
-      </div>
-
-      {/* Skills */}
-      <div>
-        <label className="block font-medium mb-1">Skills</label>
-        <textarea
-          name="skills"
-          value={form.skills}
-          onChange={handleChange}
-          placeholder="e.g. JavaScript, React, Node.js, Teamwork, Communication"
-          className="w-full border border-gray-300 p-2 rounded"
-          rows={2}
-        />
-      </div>
-
-      {/* Education */}
-      <div>
-        <label className="block font-medium mb-1">Education</label>
-        <textarea
-          name="education"
-          value={form.education}
-          onChange={handleChange}
-          placeholder="e.g. B.Tech CSE, ABC University, 2025"
-          className="w-full border border-gray-300 p-2 rounded"
-          rows={2}
-        />
-      </div>
-
-      {/* Career Goal */}
-      <div>
-        <label className="block font-medium mb-1">Career Goal</label>
-        <textarea
-          name="careerGoals"
-          value={form.careerGoals}
-          onChange={handleChange}
-          placeholder="e.g. Seeking a frontend developer role in a product-based company"
-          className="w-full border border-gray-300 p-2 rounded"
-          rows={2}
-        />
-      </div>
-
-      {/* Submit Buttons */}
-      <div className="flex gap-4">
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-slate-700/50">
         <button
           type="button"
           onClick={() => handleSubmit("resume")}
-          className="flex-1 bg-purple-700 hover:bg-purple-800 text-white py-2 px-4 rounded"
-          disabled={loadingType === "resume"}
+          className="saas-button flex-1"
+          disabled={!!loadingType}
         >
-          {loadingType === "resume" ? "Generating Resume..." : "📄 Generate Resume"}
+          {loadingType === "resume" ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              Crafting Resume...
+            </span>
+          ) : "📄 Generate Resume"}
         </button>
         <button
           type="button"
           onClick={() => handleSubmit("coverLetter")}
-          className="flex-1 bg-purple-700 hover:bg-purple-800 text-white py-2 px-4 rounded"
-          disabled={loadingType === "coverLetter"}
+          className="saas-button flex-1 !from-slate-700 !to-slate-800 hover:!from-slate-600 hover:!to-slate-700"
+          disabled={!!loadingType}
         >
-          {loadingType === "coverLetter" ? "Generating Cover Letter..." : "✉️ Generate Cover Letter"}
+          {loadingType === "coverLetter" ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              Writing Cover Letter...
+            </span>
+          ) : "✉️ Generate Cover Letter"}
         </button>
       </div>
     </form>
