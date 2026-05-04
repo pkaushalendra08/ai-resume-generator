@@ -1,4 +1,4 @@
-# 🚀 ResuAI: AI-Powered Career Document Architect
+# 🚀 ResuAI: AI-Powered Resume and CV Builder
 
 ResuAI is a modern, high-end SaaS platform designed to transform your professional profile into polished, industry-standard Resumes and Cover Letters using state-of-the-art AI. Built with a focus on premium aesthetics and seamless user experience, ResuAI helps high-performers land their dream jobs with ease.
 
@@ -21,7 +21,6 @@ ResuAI features a **Glassmorphic Dark Theme** with vibrant mesh backgrounds, smo
 - **Runtime**: [Node.js](https://nodejs.org/)
 - **Framework**: [Express 5](https://expressjs.com/)
 - **AI Integration**: [Groq Cloud API](https://groq.com/)
-- **LLM Model**: Llama-3.3-70b-versatile
 
 ---
 
