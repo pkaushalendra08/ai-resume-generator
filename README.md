@@ -102,6 +102,4 @@ npm run dev
 The application will be available at `http://localhost:5173`.
 
 ---
-
-## 📜 License
-ResuAI is licensed under the MIT License. Built for high-performers by [Kaushalendra](https://github.com/pkaushalendra08).
+Built by [Kaushalendra](https://github.com/pkaushalendra08).
